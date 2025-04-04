@@ -7,97 +7,110 @@ import (
 )
 
 func TestQueuePeekEmpty(t *testing.T) {
-	queue := factory.NewQueue[int]()
+	const EMPTY = -1
+	queue := factory.NewQueue(EMPTY)
 
 	x := queue.Peek()
-	if x != nil {
-		t.Errorf("expected nil; got %v", x)
+	if x != EMPTY {
+		t.Errorf("expected EMPTY; got %v", x)
 	}
 }
 
 func TestQueuePeekNext(t *testing.T) {
-	queue := factory.NewQueue[int]()
+	const EMPTY = -1
+	queue := factory.NewQueue(EMPTY)
 
 	queue.Push(1)
 	queue.Push(2)
 
 	a := queue.Peek()
-	if *a != 1 {
-		t.Errorf("peek() expected 1; got %d", *a)
+	if a != 1 {
+		t.Errorf("peek() expected 1; got %d", a)
 	}
 
 	b := queue.Peek()
-	if *b != 1 {
-		t.Errorf("peek() expected 1; got %d", *b)
+	if b != 1 {
+		t.Errorf("peek() expected 1; got %d", b)
 	}
 
 	c := queue.Next()
-	if *c != 1 {
-		t.Errorf("next() expected 1; got %d", *c)
+	if c != 1 {
+		t.Errorf("next() expected 1; got %d", c)
 	}
 
 	d := queue.Next()
-	if *d != 2 {
-		t.Errorf("next() expected 2; got %d", *d)
+	if d != 2 {
+		t.Errorf("next() expected 2; got %d", d)
 	}
 
 	e := queue.Next()
-	if e != nil {
-		t.Errorf("next() expected nil; got %d", e)
-	}
-
-	if b != c {
-		t.Errorf("expected b & c pointers to be equal")
-	}
-
-	if b == d {
-		t.Errorf("expected b & d pointers to NOT be equal")
+	if e != EMPTY {
+		t.Errorf("next() expected EMPTY; got %d", e)
 	}
 }
 
+type testObject struct {
+	ident int
+	value int
+}
+
+var id = 1
+
+func newTestObject(value int) *testObject {
+	t := &testObject{ident: id, value: value}
+	id++
+
+	return t
+}
 func TestQueuePeekNextPointers(t *testing.T) {
-	queue := factory.NewQueue[int]()
+	queue := factory.NewQueue[*testObject](nil)
 
-	oneA := 1
-	oneB := 1
-	two := 2
+	oneA := newTestObject(1)
 
-	p1a := &oneA
-	p1b := &oneB
-	p2 := &two
+	oneB := newTestObject(1)
 
-	if p1a == p1b {
-		t.Errorf("shouldn't pointers differ? %v vs %v", p1a, p1b)
+	two := newTestObject(2)
+
+	if *oneA == *oneB {
+		t.Errorf("should differ: %+v, %+v", *oneA, *oneB)
 	}
 
-	queue.Push(*p1a)
-	queue.Push(*p2)
+	if oneA == oneB {
+		t.Errorf("should differ: %+v, %+v", oneA, oneB)
+	}
+
+	queue.Push(oneA)
+	queue.Push(two)
 
 	a := queue.Peek()
-	if *a != 1 {
-		t.Errorf("peek() expected 1; got %d", *a)
+	if a.value != 1 {
+		t.Errorf("peek() expected 1; got %d", a.value)
 	}
 
 	b := queue.Peek()
-	if *b != 1 {
-		t.Errorf("peek() expected 1; got %d", *b)
+	if b.value != 1 {
+		t.Errorf("peek() expected 1; got %d", b.value)
+	}
+
+	if a != b {
+		t.Errorf("shouldn't pointers be equal? %v vs %v", a, b)
 	}
 
 	c := queue.Next()
-	if *c != 1 {
-		t.Errorf("next() expected 1; got %d", *c)
+	if c.value != 1 {
+		t.Errorf("next() expected 1; got %d", c.value)
 	}
 
 	d := queue.Next()
-	if *d != 2 {
-		t.Errorf("next() expected 2; got %d", *d)
+	if d.value != 2 {
+		t.Errorf("next() expected 2; got %d", d.value)
 	}
 
-	if c != p1a {
-		t.Errorf("expected p1a & c pointers to be equal")
+	if c != oneA {
+		t.Errorf("expected oneA & c pointers to be equal")
 	}
 
-	if d != p2 {
-		t.Errorf("expected p2 & d pointers to be equal")
+	if *d != *two {
+		t.Errorf("expected two & d dereferenced pointers to be equal")
 	}
 }
