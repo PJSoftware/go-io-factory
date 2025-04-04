@@ -40,6 +40,14 @@ func (q Queue[T]) Peek() T {
 	return q.contents[0]
 }
 
+// q.IsEmpty() returns true if the queue is empty
 func (q Queue[T]) IsEmpty() bool {
 	return len(q.contents) == 0
+}
+
+// q.PeekAll returns a copy of the entire contents of the queue as a slice
+// without actually modifying the slice
+func (q Queue[T]) PeekAll() []T {
+	all := []T{}
+	return append(all, q.contents...)
 }

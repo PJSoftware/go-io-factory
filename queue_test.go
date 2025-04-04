@@ -140,3 +140,32 @@ func TestQueuePeekNextPointers(t *testing.T) {
 		t.Errorf("expected two & d dereferenced pointers to be equal")
 	}
 }
+
+func TestPeekAll(t *testing.T) {
+	queue := factory.NewQueue(0)
+
+	queue.Push(1)
+	queue.Push(2)
+	queue.Push(3)
+
+	all := queue.PeekAll()
+
+	if len(all) != 3 {
+		t.Errorf("expecting list of length 3; got length %d", len(all))
+	}
+
+	if all[0] != 1 {
+		t.Errorf("expecting 1; got %d", all[0])
+	}
+	if all[1] != 2 {
+		t.Errorf("expecting 2; got %d", all[1])
+	}
+	if all[2] != 3 {
+		t.Errorf("expecting 3; got %d", all[2])
+	}
+
+	next := queue.Next()
+	if next != 1 {
+		t.Errorf("expecting next entry to be 1; got %d", next)
+	}
+}
