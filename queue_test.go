@@ -169,3 +169,20 @@ func TestPeekAll(t *testing.T) {
 		t.Errorf("expecting next entry to be 1; got %d", next)
 	}
 }
+
+func TestFlush(t *testing.T) {
+	queue := factory.NewQueue(0)
+
+	queue.Push(1)
+	queue.Push(2)
+	queue.Push(3)
+
+	if queue.IsEmpty() {
+		t.Errorf("queue expected to NOT be empty before flush")
+	}
+
+	queue.Flush()
+	if !queue.IsEmpty() {
+		t.Errorf("queue should be empty after flush")
+	}
+}

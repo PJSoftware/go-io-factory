@@ -51,3 +51,8 @@ func (q Queue[T]) PeekAll() []T {
 	all := []T{}
 	return append(all, q.contents...)
 }
+
+// q.Flush() removes the contents of the queue
+func (q *Queue[T]) Flush() {
+	q.contents = []T{}
+}

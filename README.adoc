@@ -1,0 +1,17 @@
+= package factory
+
+== Queue
+
+.Sample code
+[,go]
+----
+queue := factory.NewQueue(0)
+
+queue.Push(1)
+queue.Push(2)
+queue.Push(3)
+for !queue.IsEmpty() {
+  n := queue.Next()
+  fmt.Println(n)
+}
+----
