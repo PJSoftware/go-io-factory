@@ -62,6 +62,32 @@ func newTestObject(value int) *testObject {
 
 	return t
 }
+
+func TestDefaultAndIsEmpty(t *testing.T) {
+	toDefault := newTestObject(-1)
+	queue1 := factory.NewQueue(toDefault)
+	queue2 := factory.NewQueue[*testObject](nil)
+
+	if !queue1.IsEmpty() {
+		t.Errorf("expected queue1 to be empty")
+	}
+	if !queue2.IsEmpty() {
+		t.Errorf("expected queue2 to be empty")
+	}
+
+	if queue1.Peek() != toDefault {
+		t.Errorf("unexpected default value from queue1")
+	}
+	if queue2.Peek() != nil {
+		t.Errorf("unexpected default value from queue2")
+	}
+
+	queue1.Push(newTestObject(2))
+	if queue1.IsEmpty() {
+		t.Errorf("expected queue to NOT be empty")
+	}
+}
+
 func TestQueuePeekNextPointers(t *testing.T) {
 	queue := factory.NewQueue[*testObject](nil)
 
