@@ -1,0 +1,19 @@
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  test:
+    desc: run tests for this package
+    sources:
+      - ./*.go
+    cmds:
+      - go test ./
