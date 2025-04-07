@@ -56,3 +56,8 @@ func (q Queue[T]) PeekAll() []T {
 func (q *Queue[T]) Flush() {
 	q.contents = []T{}
 }
+
+// q.Length() returns the length of the queue
+func (q Queue[T]) Length() int {
+	return len(q.contents)
+}

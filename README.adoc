@@ -15,3 +15,85 @@ for !queue.IsEmpty() {
   fmt.Println(n)
 }
 ----
+
+=== NewQueue[T](empty T)
+
+Constructor returns a new Queue holding items of type T.
+
+For types which can be easily identified by their `empty` value ("int", "string", etc) it is not necessary to specify the type:
+
+[,go]
+----
+intQueue := factory.NewQueue(0)
+strQueue := factory.NewQueue("")
+----
+
+However, in other cases it may be necessary to specify the type:
+
+[,go]
+----
+objQueue := factory.NewQueue[*ObjectStruct](nil)
+----
+
+=== q.Push(element T)
+
+Add a new element to a queue:
+
+[,go]
+----
+strQueue.Push("element value")
+----
+
+=== q.Next()
+
+Returns the first element from the queue, and *removes that element* from the queue.
+
+[,go]
+----
+str := strQueue.Next()
+----
+
+=== q.Peek()
+
+Returns the first element from the queue, but *does not* modify the queue.
+This allows us to "peek" at the next value without removing it, to perform a look-ahead without changing the queue.
+
+[,go]
+----
+str := strQueue.Peek()
+----
+
+=== q.IsEmpty()
+
+Returns `true` if the queue is empty; otherwise returns false.
+
+Can be used for looping through the queue:
+
+[,go]
+----
+for !strQueue.IsEmpty() {
+  str := strQueue.Next()
+  fmt.Println(str)
+}
+----
+
+Note, of course, that this only allows you to loop through the queue *once*, after which it will be empty!
+The queue is *not* reusable.
+If you need a dataset that you can loop through more than once, a queue is not what you want!
+
+=== q.PeekAll()
+
+Contrary to the note above, `PeekAll()` _does_ allow you to return the entire contents of the queue as a slice of type T.
+It does not modify the queue.
+
+Whether this makes sense depends on your code, but if you find yourself using PeekAll() too much, it _may_ be a sign that you should not be using a queue.
+
+=== q.Flush()
+
+This empties the queue _without_ returning its contents.
+
+Anything still in the queue will be lost.
+
+=== q.Length()
+
+This returns the length of the queue; the number of items in the queue.
